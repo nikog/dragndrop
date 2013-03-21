@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+    <title>Drag and drop</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="control">
+        </div>
+
+        <section id="col1" class="column">
+            <ul>
+                <li draggable="true">
+                    <div class="item"><h3>Example item 1</h3></div>
+                </li>
+                <li></li>
+            </ul>
+        </section>
+
+        <section id="col2" class="column">
+            <ul>
+                <li draggable="true">
+                    <div class="item"><h3>Example item 2</h3></div>
+                </li>
+                <li draggable="true">
+                    <div class="item"><h3>Example item 3</h3></div>
+                </li>
+                <li></li>
+            </ul>
+        </section>
+
+        <section id="col3" class="column">
+            <ul>
+                <li draggable="true">
+                    <div class="item"><h3>Example item 4</h3></div>
+                </li>
+                <li></li>
+            </ul>
+        </section>
+    </div>
+
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/template" id="item_template">
+        <li draggable="true">
+            <div class="item">
+            </div>
+        </li>
+    </script>
+</body>
+
+</html>

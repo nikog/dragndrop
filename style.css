@@ -1,0 +1,110 @@
+html {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans;
+    font-size: 16px;
+}
+
+body {
+    background-color: #1ABC9C;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.wrap {
+    width: 960px;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.control {
+    position: absolute;
+    top: 20px;
+    right: 960px;
+    padding: 10px;
+    margin: 0 10px;
+    background-color: #ECF0F1;
+    border-radius: 6px;
+    align: right;
+    width: 40px;
+    height: 20px;
+}
+.control:before {
+    content: "Add";
+    line-height: 20px;
+    font-size: 20px;
+}
+
+.column {
+    margin: 0 10px;
+    width: 300px;
+    height: 100%;
+    float: left;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+ul li {
+    list-style: none;
+    padding: 0;
+    padding-top: 20px;
+    margin: 0;
+    position: relative;
+    z-index: 999;
+}
+ul li:last-child {
+    width: 300px;
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    bottom: 0;
+}
+
+.item {
+    padding: 10px;
+    background-color: #ECF0F1;
+    border-radius: 6px;
+}
+.item:hover {
+    opacity: 0.95;
+    transition: 0.24s;
+}
+
+.item h3 {
+    font-weight: 300;
+    margin: 0;
+    padding: 10px;
+    line-height: 20px;
+    color: #34495E;
+    font-size: 18px;
+    white-space: pre;
+}
+
+.editfield {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans;
+    font-weight: 300;
+    color: #34495E;
+    background-color: transparent;
+    line-height: 20px;
+    font-size: 18px;
+    padding: 10px;
+    margin: 0;
+    min-height: 40px;
+    width: 280px;
+    box-sizing: border-box;
+    border: none;
+    resize: none;
+    outline: none;
+}
+
+
+.nodrop {
+    pointer-events: none;
+}
