@@ -1,6 +1,6 @@
 var App = (function() {
     var _this;
-    var dragEle;
+    var $source;
     var itemCounter = 0;
 
     var App = function() {
@@ -90,11 +90,14 @@ var App = (function() {
         $editField.select();
     }
 
+    /* Drag events */
+
     App.prototype.dragStart = function(e) {
-        this.style.opacity = '0.4';
+        console.log('dragging');
         e.originalEvent.dataTransfer.dropEffect = 'move';
 
-        dragEle = this;
+        $source = $(this).parents('li');
+        $source.find('header').css({opacity: 0.4});
     };
 
     App.prototype.dragOver = function(e) {
@@ -107,9 +110,9 @@ var App = (function() {
     };
 
     App.prototype.dragEnter = function(e) {
-        // this / e.target is the current hover target.
-        $(this).addClass('over');
-        $(this).parent().children('li div h3').addClass('nodrop');
+        var $this = $(this);
+        $this.addClass('over');
+        $this.parent().children('li div h3').addClass('nodrop');
     };
 
     App.prototype.dragLeave = function(e) {
@@ -117,7 +120,7 @@ var App = (function() {
     };
 
     App.prototype.dragEnd = function(e) {
-        this.style.opacity = 1;
+        $source.find('header').css({opacity: 1});
     };
 
     App.prototype.drop = function(e) {
@@ -125,9 +128,28 @@ var App = (function() {
             e.stopPropagation(); // stops the browser from redirecting.
         }
 
-        dragEle.style.opacity = 1;
-        $(this).before($(dragEle.outerHTML));
-        $(dragEle).remove();
+        $source.find('header').css({opacity: 1});
+
+        var $target, sourceHTML;
+
+        $target = $(this);
+        sourceHTML = $source[0].outerHTML;
+
+        if($target.is(':last-child')) {
+            // Last child that spans the whole column
+            $target.before(sourceHTML);
+        } else if($target.parents('ul')[0] != $source.parents('ul')[0]) {
+            // Another column
+            $target.before(sourceHTML)
+        } else {
+            if($target.index() < $source.index()) {
+                $target.before(sourceHTML);
+            } else {
+                $target.after(sourceHTML);
+            }
+        }
+
+        $source.remove();
 
         return false;
     };
