@@ -71,16 +71,36 @@ ul li:last-child {
     padding: 10px;
     background-color: #ECF0F1;
     border-radius: 6px;
+    position: relative;
 }
 .item:hover {
-    opacity: 0.95;
-    transition: 0.24s;
+}
+
+.btn {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    width: 10px;
+    height: 10px;
+    background: none;
+    border: none;
+    border-radius: 50px;
+    margin: 0;
+    padding: 0;
+}
+.item_delete {
+    background-color: #C0392B;
+}
+.item_edit {
+    background-color: #27AE60;
+    margin-left: 15px;
 }
 
 .item h3 {
     font-weight: 300;
     margin: 0;
     padding: 10px;
+    padding-top: 20px;
     line-height: 20px;
     color: #34495E;
     font-size: 18px;

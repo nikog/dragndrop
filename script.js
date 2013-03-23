@@ -19,7 +19,8 @@ var App = (function() {
         $columns.on('dragover', 'ul li', _this.dragOver);
         $columns.on('drop', 'ul li', _this.drop);
 
-        $columns.on('click', 'h3', this.onEdit);
+        $columns.on('click', '.item_delete', this.delete);
+        $columns.on('click', '.item_edit', this.edit);
 
         $('.control').on('click', null, this.add);
 
@@ -44,13 +45,22 @@ var App = (function() {
         _this.addEditField(newItem.find('div'), "Item " + itemCounter);
     };
 
-    App.prototype.onEdit = function(e) {
+    App.prototype.edit = function(e) {
         var $itemDiv = $(this).parent();
-        var text = $(this).text();
 
-        $(this).remove();
+        var $content = $(this).parent().find('h3');
+        var text = $content.text();
+
+        $content.remove();
         _this.addEditField($itemDiv, text);
     };
+
+    App.prototype.delete = function(e) {
+        console.log('deleting');
+        $(this).parents('li').remove();
+    }
+
+    /* --------- */
 
     App.prototype.addEditField = function($itemDiv, text) {
         var $editField = $(document.createElement('textarea')).attr({
