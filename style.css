@@ -50,6 +50,8 @@ ul {
     padding: 0;
     margin: 0;
     height: 100%;
+    overflow-y: auto;
+    scrollbar: hidden;
 }
 ul li {
     list-style: none;
@@ -59,12 +61,21 @@ ul li {
     position: relative;
     z-index: 999;
 }
+
+/* Last list item spans the whole column to simplify JS */
 ul li:last-child {
     width: 300px;
     position: absolute;
     z-index: 10;
     top: 0;
     bottom: 0;
+    background-color: #ecf0f1;
+    opacity: 0.1;
+}
+
+/* Add some space to bottom of list */
+ul li:nth-last-child(2) {
+    margin-bottom: 100px;
 }
 
 .item {
@@ -115,6 +126,7 @@ ul li:last-child {
     line-height: 20px;
     font-size: 18px;
     padding: 10px;
+    padding-top: 20px;
     margin: 0;
     min-height: 40px;
     width: 280px;
