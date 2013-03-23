@@ -1,6 +1,7 @@
 var App = (function() {
     var _this;
     var dragEle;
+    var itemCounter = 0;
 
     var App = function() {
         _this = this;
@@ -20,17 +21,27 @@ var App = (function() {
 
         $columns.on('click', 'h3', this.onEdit);
 
-        $('.control').on('click', null, this.onAdd);
+        $('.control').on('click', null, this.add);
 
         $('.new').hide();
+
+        return this;
     };
 
-    App.prototype.onAdd = function(e) {
-        var itemTemplate = $('#item_template').text();
-        var newItem = $('#col1 ul').prepend(
-            $(document.createElement('div')).html(itemTemplate).contents());
+    /* Item actions */
 
-        _this.addEditField(newItem.find('li div').first(), "y u no work");
+    App.prototype.add = function(e, col) {
+        itemCounter++;
+
+        col = col || 1;
+
+        var itemTemplate = $('#item_template').text();
+        var newItem = $(document.createElement('div')).html(itemTemplate).contents();
+        
+        $('#col' + col + ' ul li:last-child').before(newItem);
+
+        //console.log(newItem.find('div'));
+        _this.addEditField(newItem.find('div'), "Item " + itemCounter);
     };
 
     App.prototype.onEdit = function(e) {
@@ -111,7 +122,20 @@ var App = (function() {
         return false;
     };
 
+    /* --------- */
+
+    App.prototype.addExampleItems = function() {
+        console.log('Adding examples');
+        this.add(null, 1);
+        this.add(null, 2);
+        this.add(null, 2);
+        this.add(null, 3);
+
+        return this;
+    }
+
     return App;
 })();
 
-new App().init();
+var app = new App();
+app.addExampleItems().init();
