@@ -3,6 +3,14 @@ var App = (function() {
     var $source;
     var itemCounter = 0;
 
+    var colors = [
+        'green', // green
+        'blue', // blue
+        'purple', // purple
+        'yellow', // yellow
+        'red', // red
+    ];
+
     var App = function() {
         _this = this;
     };
@@ -21,10 +29,11 @@ var App = (function() {
 
         $columns.on('click', '.item_delete', this.delete);
         $columns.on('click', '.item_edit', this.edit);
+        $columns.on('click', '.colorbtn', this.changeColor);
 
         $('.control').on('click', null, this.add);
 
-        $('.new').hide();
+        $('.colorbtn').hide();
 
         return this;
     };
@@ -53,11 +62,25 @@ var App = (function() {
 
         $content.remove();
         _this.addEditField($itemDiv, text);
+
+        $itemDiv.find('.colorbtn').show();
     };
 
     App.prototype.delete = function(e) {
         console.log('deleting');
         $(this).parents('li').remove();
+    }
+
+    App.prototype.changeColor = function(e) {
+        var $this = $(this);
+
+        $this.parent().find('header').removeClass(function() {
+            return colors.join(' ');
+        }).addClass(function() {
+            return $this.attr('class').split(' ')[2];
+        });
+
+        $this.parent().find('.colorbtn').hide();
     }
 
     /* --------- */
