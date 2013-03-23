@@ -43,15 +43,24 @@ var App = (function() {
     App.prototype.add = function(e, col) {
         itemCounter++;
 
-        col = col || 1;
+        var mCol = col || 1;
 
         var itemTemplate = $('#item_template').text();
-        var newItem = $(document.createElement('div')).html(itemTemplate).contents();
+        var newItem = $(document.createElement('div'))
+                .html(itemTemplate).contents();
         
-        $('#col' + col + ' ul li:last-child').before(newItem);
+        $('#col' + mCol + ' ul li:last-child').before(newItem);
 
-        //console.log(newItem.find('div'));
-        _this.addEditField(newItem.find('div'), "Item " + itemCounter);
+        var text = "Item " + itemCounter;
+
+        if(col == undefined) {
+            // This was added through add button
+            _this.addEditField(newItem.find('div'), text);
+        } else {
+            // Likely called manually
+            newItem.find('div').append($(document.createElement('h3'))
+                .text(text));
+        }
     };
 
     App.prototype.edit = function(e) {
@@ -79,8 +88,6 @@ var App = (function() {
         }).addClass(function() {
             return $this.attr('class').split(' ')[2];
         });
-
-        $this.parent().find('.colorbtn').hide();
     }
 
     /* --------- */
@@ -99,13 +106,28 @@ var App = (function() {
             //this.rows = rows;
         });
 
-        $editField.on('blur keypress', null, function(e) {
-            if(e.which === 12 || e.type === "blur") {
-                $itemDiv.append(
-                    $(document.createElement('h3'))
-                    .text($editField.val() || text) );
-                $editField.remove();
-            }
+        // Keep edits
+        $itemDiv.on('click', '.item_edit', function(e) {
+            e.stopPropagation();
+            $itemDiv.append(
+                $(document.createElement('h3'))
+                .text($editField.val()));
+
+            $editField.remove();
+            $(this).parent().find('.colorbtn').hide();
+            $itemDiv.off('click');
+        });
+
+        // Cancel edits
+        $itemDiv.on('click', '.item_delete', function(e) {
+            e.stopPropagation();
+            $itemDiv.append(
+                $(document.createElement('h3'))
+                .text(text));
+
+            $editField.remove();
+            $(this).parent().find('.colorbtn').hide();
+            $itemDiv.off('click');
         });
 
         $itemDiv.append($editField);
