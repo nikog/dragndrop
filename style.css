@@ -128,12 +128,14 @@ ul li:nth-last-child(2) {
 .purple { background-color: #9B59B6 !important; }
 .yellow { background-color: #F1C40F !important; }
 .red { background-color: #E74C3C !important; }
+.gray { background-color: #BDC3C7 !important; }
 
-.btn.green { margin-right: 0px; }
-.btn.blue { margin-right: 15px; }
-.btn.purple { margin-right: 30px; }
-.btn.yellow { margin-right: 45px; }
-.btn.red { margin-right: 60px; }
+.btn.gray { margin-right: 0; }
+.btn.green { margin-right: 15px; }
+.btn.blue { margin-right: 30px; }
+.btn.purple { margin-right: 45px; }
+.btn.yellow { margin-right: 60px; }
+.btn.red { margin-right: 75px; }
 
 .item h3 {
     font-weight: 300;

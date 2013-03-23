@@ -9,6 +9,7 @@ var App = (function() {
         'purple', // purple
         'yellow', // yellow
         'red', // red
+        'gray', 
     ];
 
     var App = function() {
