@@ -47,34 +47,53 @@ var App = (function() {
         var mCol = col || 1;
 
         var itemTemplate = $('#item_template').text();
-        var newItem = $(document.createElement('div'))
+        var $newItem = $(document.createElement('div'))
                 .html(itemTemplate).contents();
         
-        $('#col' + mCol + ' ul li:last-child').before(newItem);
+        $('#col' + mCol + ' ul li:last-child').before($newItem);
 
         var text = "Item " + itemCounter;
 
         if(col == undefined) {
             // This was added through add button
-            _this.addEditField(newItem.find('div'), text);
+            _this.addEditField($newItem.find('div'), text);
         } else {
             // Likely called manually
-            newItem.find('div').append($(document.createElement('h3'))
-                .text(text));
+            $newItem.find('.content').text(text);
         }
     };
 
     App.prototype.edit = function(e) {
         var $itemDiv = $(this).parent();
 
-        var $content = $(this).parent().find('h3');
+        var $content = $itemDiv.find('.content');
         var text = $content.text();
 
-        $content.remove();
         _this.addEditField($itemDiv, text);
 
         $itemDiv.find('.colorbtn').show();
     };
+
+    App.prototype.endEdit = function(e) {
+        e.stopPropagation();
+        console.log('endedit');
+
+        var $this, $itemDiv, text;
+        
+        $this = $(this);
+        $itemDiv = $this.parent();
+        text = e.data.text;
+
+        if(text instanceof jQuery) {
+            text = text.val();
+        }
+
+        $itemDiv.find('.content').text(text).show();
+
+        $itemDiv.find('textarea').remove();
+        $itemDiv.find('.colorbtn').hide();
+        $itemDiv.off('click');
+    }
 
     App.prototype.delete = function(e) {
         console.log('deleting');
@@ -93,43 +112,35 @@ var App = (function() {
 
     /* --------- */
 
-    App.prototype.addEditField = function($itemDiv, text) {
-        var $editField = $(document.createElement('textarea')).attr({
+    App.prototype.addEditField = function($itemDiv, content) {
+        var $editField;
+
+        $itemDiv.find('.content').hide();
+
+        $editField = $(document.createElement('textarea')).attr({
             type: 'text',
             class: 'editfield',
             rows: 1
-        }).html(text);
+        }).html(content);
 
         $editField.on('keydown focus select blur', null, function(e) {
             var rows = this.value.split("\n").length || 1;
-
             $(this).height((rows * 20)+20);
-            //this.rows = rows;
         });
 
         // Keep edits
-        $itemDiv.on('click', '.item_edit', function(e) {
-            e.stopPropagation();
-            $itemDiv.append(
-                $(document.createElement('h3'))
-                .text($editField.val()));
-
-            $editField.remove();
-            $(this).parent().find('.colorbtn').hide();
-            $itemDiv.off('click');
-        });
+        $itemDiv.on(
+            'click', 
+            '.item_edit', 
+            { text: $editField },
+            _this.endEdit);
 
         // Cancel edits
-        $itemDiv.on('click', '.item_delete', function(e) {
-            e.stopPropagation();
-            $itemDiv.append(
-                $(document.createElement('h3'))
-                .text(text));
-
-            $editField.remove();
-            $(this).parent().find('.colorbtn').hide();
-            $itemDiv.off('click');
-        });
+        $itemDiv.on(
+            'click', 
+            '.item_delete', 
+            { text: content },
+            _this.endEdit);
 
         $itemDiv.append($editField);
 

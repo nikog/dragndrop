@@ -137,7 +137,7 @@ ul li:nth-last-child(2) {
 .btn.yellow { margin-right: 60px; }
 .btn.red { margin-right: 75px; }
 
-.item h3 {
+.content {
     font-weight: 300;
     margin: 0;
     padding: 10px;
