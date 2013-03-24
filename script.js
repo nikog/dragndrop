@@ -2,6 +2,7 @@ var App = (function() {
     var _this;
     var $source;
     var itemCounter = 0;
+    var editing;
 
     var colors = [
         'green', // green
@@ -48,8 +49,11 @@ var App = (function() {
 
     App.prototype.add = function(e, col) {
         itemCounter++;
-
         var mCol = col || 1;
+
+        if(editing && !col) {
+            _this.endEdit();
+        }
 
         cache.$newItem = cache.$newItemTpl.clone();
 
@@ -60,16 +64,19 @@ var App = (function() {
         cache.$itemDiv = cache.$newItem.find('div');
         cache.$content = cache.$itemDiv.find('p');
 
-        if(col == undefined) {
+        cache.$content.text(text);
+
+        if(!col) {
             // This was added through add button
             _this.addEditField(text);
-        } else {
-            // Likely called manually
-            cache.$content.text(text);
         }
     };
 
     App.prototype.edit = function(e) {
+        if(editing) {
+            _this.endEdit();
+        }
+
         cache.$itemDiv = $(this).closest('div');
         cache.$content = cache.$itemDiv.find('p');
 
@@ -79,17 +86,19 @@ var App = (function() {
     };
 
     App.prototype.endEdit = function(e) {
-        e.stopPropagation();
-        console.log('endedit');
-
-        if(e.data.action == 'save') {
-            cache.$content.text(cache.$editField.val());
+        if(e) {
+            e.stopPropagation();
+            if(e.data.action == 'save') {
+                cache.$content.text(cache.$editField.val());
+            }
         }
 
         cache.$content.show();
         cache.$editField.remove();
         cache.$colorbtn.hide();
         cache.$itemDiv.off('click');
+
+        editing = false;
     }
 
     App.prototype.delete = function(e) {
@@ -112,6 +121,7 @@ var App = (function() {
     // Replace static text with editable field
     App.prototype.addEditField = function(content) {
         var $editField;
+        editing = true;
 
         cache.$content.hide();
 
