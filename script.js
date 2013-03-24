@@ -12,6 +12,8 @@ var App = (function() {
         'gray', 
     ];
 
+    var cache = {};
+
     var App = function() {
         _this = this;
     };
@@ -36,6 +38,9 @@ var App = (function() {
 
         $('.colorbtn').hide();
 
+        cache.$newItemTpl = $(document.createElement('div'))
+                .html($('#item_template').text()).contents();
+
         return this;
     };
 
@@ -46,53 +51,45 @@ var App = (function() {
 
         var mCol = col || 1;
 
-        var itemTemplate = $('#item_template').text();
-        var $newItem = $(document.createElement('div'))
-                .html(itemTemplate).contents();
-        
-        $('#col' + mCol + ' ul li:last-child').before($newItem);
+        cache.$newItem = cache.$newItemTpl.clone();
+
+        $('#col' + mCol + ' ul li:last-child').before(cache.$newItem);
 
         var text = "Item " + itemCounter;
 
+        cache.$itemDiv = cache.$newItem.find('div');
+        cache.$content = cache.$itemDiv.find('p');
+
         if(col == undefined) {
             // This was added through add button
-            _this.addEditField($newItem.find('div'), text);
+            _this.addEditField(text);
         } else {
             // Likely called manually
-            $newItem.find('.content').text(text);
+            cache.$content.text(text);
         }
     };
 
     App.prototype.edit = function(e) {
-        var $itemDiv = $(this).parent();
+        cache.$itemDiv = $(this).closest('div');
+        cache.$content = cache.$itemDiv.find('p');
 
-        var $content = $itemDiv.find('.content');
-        var text = $content.text();
+        var text = cache.$content.text();
 
-        _this.addEditField($itemDiv, text);
-
-        $itemDiv.find('.colorbtn').show();
+        _this.addEditField(text);
     };
 
     App.prototype.endEdit = function(e) {
         e.stopPropagation();
         console.log('endedit');
 
-        var $this, $itemDiv, text;
-        
-        $this = $(this);
-        $itemDiv = $this.parent();
-        text = e.data.text;
-
-        if(text instanceof jQuery) {
-            text = text.val();
+        if(e.data.action == 'save') {
+            cache.$content.text(cache.$editField.val());
         }
 
-        $itemDiv.find('.content').text(text).show();
-
-        $itemDiv.find('textarea').remove();
-        $itemDiv.find('.colorbtn').hide();
-        $itemDiv.off('click');
+        cache.$content.show();
+        cache.$editField.remove();
+        cache.$colorbtn.hide();
+        cache.$itemDiv.off('click');
     }
 
     App.prototype.delete = function(e) {
@@ -112,39 +109,42 @@ var App = (function() {
 
     /* --------- */
 
-    App.prototype.addEditField = function($itemDiv, content) {
+    // Replace static text with editable field
+    App.prototype.addEditField = function(content) {
         var $editField;
 
-        $itemDiv.find('.content').hide();
+        cache.$content.hide();
 
-        $editField = $(document.createElement('textarea')).attr({
+        cache.$editField = $(document.createElement('textarea')).attr({
             type: 'text',
             class: 'editfield',
             rows: 1
         }).html(content);
 
-        $editField.on('keydown focus select blur', null, function(e) {
+        cache.$editField.on('keydown focus select blur', null, function(e) {
             var rows = this.value.split("\n").length || 1;
             $(this).height((rows * 20)+20);
         });
 
         // Keep edits
-        $itemDiv.on(
+        cache.$itemDiv.on(
             'click', 
             '.item_edit', 
-            { text: $editField },
+            { action: 'save' },
             _this.endEdit);
 
         // Cancel edits
-        $itemDiv.on(
+        cache.$itemDiv.on(
             'click', 
-            '.item_delete', 
-            { text: content },
+            '.item_delete',
+            { action: 'cance' },
             _this.endEdit);
 
-        $itemDiv.append($editField);
+        cache.$itemDiv.append(cache.$editField);
 
-        $editField.select();
+        cache.$colorbtn = cache.$itemDiv.find('.colorbtn').show();
+
+        cache.$editField.select();
     }
 
     /* Drag events */
@@ -154,7 +154,8 @@ var App = (function() {
         e.originalEvent.dataTransfer.dropEffect = 'move';
 
         $source = $(this).parents('li');
-        $source.find('header').css({opacity: 0.4});
+        cache.$header = $source.find('header');
+        cache.$header.css({opacity: 0.4});
     };
 
     App.prototype.dragOver = function(e) {
@@ -177,7 +178,7 @@ var App = (function() {
     };
 
     App.prototype.dragEnd = function(e) {
-        $source.find('header').css({opacity: 1});
+        cache.$header.css({opacity: 1});
     };
 
     App.prototype.drop = function(e) {
@@ -185,7 +186,7 @@ var App = (function() {
             e.stopPropagation(); // stops the browser from redirecting.
         }
 
-        $source.find('header').css({opacity: 1});
+        cache.$header.css({opacity: 1});
 
         var $target, sourceHTML;
 
@@ -227,4 +228,4 @@ var App = (function() {
 })();
 
 var app = new App();
-app.addExampleItems().init();
+app.init().addExampleItems();

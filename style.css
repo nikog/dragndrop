@@ -122,6 +122,7 @@ ul li:nth-last-child(2) {
 .colorbtn {
     left: auto;
     right: 10px;
+    display: none;
 }
 .green { background-color: #2ECC71 !important; }
 .blue { background-color: #3498DB !important; }
